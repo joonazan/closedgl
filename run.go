@@ -12,17 +12,18 @@ func Run(render func(dt float64), width, height int, title string) {
 	// OpenGL kaatuu jos sitä kutsutaan eri CPUista
 	runtime.LockOSThread()
 
-	complain(glfw.Init())
+	complain(glfw.Init(), "Initializing GLFW:")
 	defer glfw.Terminate()
 
-	complain(gl.Init())
-
+	glfw.WindowHint(glfw.ContextVersionMajor, 2)
+	glfw.WindowHint(glfw.ContextVersionMinor, 1)
 	glfw.WindowHint(glfw.Resizable, glfw.False)
 	w, err := glfw.CreateWindow(width, height, title, nil, nil)
-	complain(err)
+	complain(err, "Creating window:")
 	defer w.Destroy()
 
 	w.MakeContextCurrent()
+	complain(gl.Init(), "Initializing OpenGL:")
 
 	for !w.ShouldClose() {
 
@@ -35,8 +36,8 @@ func Run(render func(dt float64), width, height int, title string) {
 	}
 }
 
-func complain(err error) {
+func complain(err error, msg string) {
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(msg, err)
 	}
 }
