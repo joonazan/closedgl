@@ -25,7 +25,11 @@ func Run(render func(dt float64), width, height int, title string) {
 	w.MakeContextCurrent()
 
 	for !w.ShouldClose() {
-		render(0)
+
+		gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+
+		render(glfw.GetTime())
+
 		w.SwapBuffers()
 		glfw.PollEvents()
 	}
