@@ -40,11 +40,11 @@ func destroyWindow(w *glfw.Window) {
 	glfw.Terminate()
 }
 
-func Run(render func(dt float64), width, height int, title string) {
+func Run(render func(time float64), width, height int, title string) {
 	RunInWindow(render, NewWindow(width, height, title))
 }
 
-func RunInWindow(render func(dt float64), window *glfw.Window) {
+func RunInWindow(render func(time float64), window *glfw.Window) {
 
 	for !window.ShouldClose() {
 
