@@ -8,6 +8,7 @@ import (
 )
 
 func NewWindow(width, height int, title string) *glfw.Window {
+
 	// OpenGL kaatuu jos sitä kutsutaan eri CPUista
 	runtime.LockOSThread()
 
@@ -18,6 +19,9 @@ func NewWindow(width, height int, title string) *glfw.Window {
 	glfw.WindowHint(glfw.Resizable, glfw.False)
 	window, err := glfw.CreateWindow(width, height, title, nil, nil)
 	complain(err, "Creating window:")
+
+	// Tämä saa GetKey:n sanomaan että nappula on pohjassa, jos se kävi pohjassa.
+	window.SetInputMode(glfw.StickyKeysMode, glfw.True)
 
 	window.MakeContextCurrent()
 	complain(gl.Init(), "Initializing OpenGL:")
