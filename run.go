@@ -7,37 +7,50 @@ import (
 	"runtime"
 )
 
-func Run(render func(dt float64), width, height int, title string) {
-
+func NewWindow(width, height int, title string) *glfw.Window {
 	// OpenGL kaatuu jos sitä kutsutaan eri CPUista
 	runtime.LockOSThread()
 
 	complain(glfw.Init(), "Initializing GLFW:")
-	defer glfw.Terminate()
 
 	glfw.WindowHint(glfw.ContextVersionMajor, 2)
 	glfw.WindowHint(glfw.ContextVersionMinor, 1)
 	glfw.WindowHint(glfw.Resizable, glfw.False)
-	w, err := glfw.CreateWindow(width, height, title, nil, nil)
+	window, err := glfw.CreateWindow(width, height, title, nil, nil)
 	complain(err, "Creating window:")
-	defer w.Destroy()
 
-	w.MakeContextCurrent()
+	window.MakeContextCurrent()
 	complain(gl.Init(), "Initializing OpenGL:")
 
-	for !w.ShouldClose() {
-
-		gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-
-		render(glfw.GetTime())
-
-		w.SwapBuffers()
-		glfw.PollEvents()
-	}
+	return window
 }
 
 func complain(err error, msg string) {
 	if err != nil {
 		log.Fatal(msg, err)
 	}
+}
+
+func destroyWindow(w *glfw.Window) {
+	w.Destroy()
+	glfw.Terminate()
+}
+
+func Run(render func(dt float64), width, height int, title string) {
+	RunInWindow(render, NewWindow(width, height, title))
+}
+
+func RunInWindow(render func(dt float64), window *glfw.Window) {
+
+	for !window.ShouldClose() {
+
+		gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+
+		render(glfw.GetTime())
+
+		window.SwapBuffers()
+		glfw.PollEvents()
+	}
+
+	destroyWindow(window)
 }
