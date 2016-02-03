@@ -17,6 +17,7 @@ func NewWindow(width, height int, title string) *glfw.Window {
 	glfw.WindowHint(glfw.ContextVersionMajor, 2)
 	glfw.WindowHint(glfw.ContextVersionMinor, 1)
 	glfw.WindowHint(glfw.Resizable, glfw.False)
+	glfw.WindowHint(glfw.Samples, 8)
 	window, err := glfw.CreateWindow(width, height, title, nil, nil)
 	complain(err, "Creating window:")
 
